@@ -41,9 +41,11 @@ The text of the problem is available [here](https://adventofcode.com/2025/day/2#
 
 #### What are we asked to find?
 
+* The sum of invalid ids
 
 ### Explore
 
+* This time invalid ids are ones that consist exclusively of repeated units - but these units can be as short as a single digit.
 
 ### Plan
 
