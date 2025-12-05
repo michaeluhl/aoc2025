@@ -48,3 +48,8 @@ The count of all possible fresh ids
 > [!CAUTION]
 > This method works for the sample data but fails with a memory error when used with the real data.
 
+### Plan (2nd Attempt)
+
+* Sort the list of ranges
+* Attempt to merge ranges
+* Then based on the list of merged ranges, calculate the total number of ids

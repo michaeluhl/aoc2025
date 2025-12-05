@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def main(options):
     ranges: list[tuple[int, range]] = []
     ids: list[int] = []
@@ -24,18 +21,20 @@ def main(options):
                 break
     print(f"Count: {ct}")
 
-    # Build bitmask
-    msk = 0
-    for _, rng in ranges:
-        for v in rng:
-            msk |= 1 << v
+    ranges = sorted(ranges, key=lambda t: t[0])
+    consolidated = [ranges.pop(0)[-1]]
 
-    # Read out bitmask
-    ct = 0
-    while msk:
-        if msk & 1:
-            ct += 1
-        msk >>= 1
+    while ranges:
+        _, r = ranges.pop(0)
+        if r.start in consolidated[-1]:
+            if r.stop in consolidated[-1]:
+                pass
+            e = consolidated.pop()
+            consolidated.append(range(e.start, max(e.stop, r.stop)))
+        else:
+            consolidated.append(r)
+
+    ct = sum(len(r) for r in consolidated)
 
     print(f"Total: {ct}")
 
