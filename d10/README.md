@@ -63,5 +63,76 @@ $$
   * This works... for the sample data
   * It appears to be unusably slow for the full data.  Even running for 30 minutes it doesn't obtain the solution for the first row of the real data
 
+* After pursuing this a little more, the answer is to consider this as a system of [Diophantine_equations](https://en.wikipedia.org/wiki/Diophantine_equation) (linear equations with integer coefficients and integer solutions - exactly what we need, since we have to push the buttons whole numbers of times).  A particular solution can be found by decomposing the coefficient matrix into [Smith Normal Form](https://en.wikipedia.org/wiki/Smith_normal_form).
+
+* The process of producing the Smith Normal Form gives two matrices, $U$ and $V$ such that, $A_{SNF} = U A V$; the Wikipedia article refers to $A_{SNF}$ as $B$.
+  Further, the article refers to $U b$ (as I write it here) as $D$.
+
+* The original system can thus be re-written as:
+
+$$
+U A V V^{-1} x = U b
+$$
+
+  or 
+
+$$
+B V^{-1} x = D
+$$
+
+* $B$ is only non-zero on the diagonal - and even then, only some of the entries are non-zero - we can rewrite this as:
+
+$$
+V^{-1} x = \left[d_1/b_{1,1} ... d_k/b_{k,k} h_{k+1} ... h_n\right]^T
+$$
+
+  where $k$ is the index of the last non-zero entry in the diagonal of $B$ and $h_{k+1}$ thru $h_n$ are arbitrary integers.
+  We'll call this vector $y$
+
+$$
+V^{-1} x = y
+$$
+
+* It follows, then, that
+
+$$
+x = V y
+$$
+
+* All my troubles come in determining the appropriate values of $h_{k+1}$ through ${h_n}$, as these are what's needed to answer the ultimate question for each machine - what's the sum of the number of time each button must be pushed to get right joltage.
+  We need to determine the right values of these free variables ($h_i$) in order to minimize $x$ while keeping all values non-negative.
+
+* We can see the effect of each free variable by looking at:
+
+$$
+V \left[ d_1/b_{1,1} ... d_k/b_{k,k} 1 ... 0 \right]^T - x
+$$
+
+* We set each $h_i$ individually to $1$, calculate the product with $V$ and subtract $x$.
+  This shows us how each $h_i$ affects the solution vector.
+
+* We can make a matrix out of these vectors...
+
+$$
+Y = \left[ y_{k+1}^T ... y_n^T \right]
+$$
+
+* Then we can consider the system:
+
+$$
+Y h \le x
+$$
+
+  where all $h_i \ge 0$
+
+* From what I gather this is a [linear pogramming](https://en.wikipedia.org/wiki/Linear_programming) problem, but really this doesn't help much.
+
+* Instead we can go through each row of $Y$ and $x$ and look for rows in $Y$ that have only one non-zero value.
+  If we find any of those, they can be use to set constraints on the values of $h$
+
+* What took me a long time was realizing that we can also add rows with within $Y$ to look for combinations that give us a single non-zero value, and then use those results to set constraints as well.
+
+* This last piece allowed me to obtain solutions in reasonable times.
+
 ### Plan
 
